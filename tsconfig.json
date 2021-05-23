@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true,
+        "declaration": true,
+        "lib": ["DOM", "es6", "ES2020"],
+        "moduleResolution": "node",
+        "outDir": "./dist",
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "sourceMap": true,
+        "target": "ES2020"
+    },
+    "include": [
+        "**/*.json",
+        "src/**/*.ts",
+        "trello-norberteder/main.js"
+    ]
+}
