@@ -70,15 +70,15 @@ export class Member {
 		this.raw = data;
 	}
 
-	async fetchBoard(boardId: string): Promise<Board> {
-		const board = await Board.fetch(boardId);
-		const cachedBoard = this.boards.get(board.id);
-		if(cachedBoard) {
-			Object.assign(cachedBoard.raw, board.raw);
-			return cachedBoard;
-		} else {
-			this.boards.set(board.id, board);
-			return board;
-		}
-	}
+	// async fetchBoard(boardId: string): Promise<Board> {
+	// 	const board = await Board.fetch(boardId);
+	// 	const cachedBoard = this.boards.get(board.id);
+	// 	if(cachedBoard) {
+	// 		Object.assign(cachedBoard.raw, board.raw);
+	// 		return cachedBoard;
+	// 	} else {
+	// 		this.boards.set(board.id, board);
+	// 		return board;
+	// 	}
+	// }
 }

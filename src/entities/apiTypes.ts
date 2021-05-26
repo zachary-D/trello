@@ -1,4 +1,23 @@
-//Interfaces in this file are pulled from the Trello API documentation
+//types in this file are pulled from the Trello API documentation
+
+export enum LabelColor {
+	black = "black",
+	blue = "blue",
+	green = "green",
+	lime = "lime",
+	orange = "orange",
+	pink = "pink",
+	purple = "purple",
+	red = "red",
+	sky = "sky",
+	yellow = "yellow"
+}
+
+export interface LabelDataRaw {
+	color: LabelColor;
+	id: string;
+	idBoard: string;
+}
 
 export interface LimitsObject {
 	disableAt: number;

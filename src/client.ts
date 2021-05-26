@@ -1,5 +1,5 @@
 import * as superagent from "superagent";
-import { HttpRequestType } from "./types";
+import { HttpRequestMethod } from "./types";
 
 const TRELLO_API_URL = "https://api.trello.com";
 
@@ -12,7 +12,7 @@ export class Client {
 		this.apiToken = apiToken;
 	}
 
-	async makeRequest(method: HttpRequestType, path: string, data: any): Promise<any> {
+	async makeRequest(method: HttpRequestMethod, path: string, data: any = {}): Promise<any> {
 		//Inject api credentials
 		Object.assign(data, {key: this.apiKey, token: this.apiToken});
 

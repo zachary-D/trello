@@ -1,5 +1,9 @@
-import { LimitsObject, Prefs } from "./apiTypes";
+import { Client } from "../client";
+import { LabelDataRaw, LimitsObject, Prefs } from "./apiTypes";
+import { Entity } from "./entity";
+import { HTTP } from "../types";
 
+//TODO: the data returned by the API is significantly less that this
 //TODO: alphabetize/otherwise sort (or should we leave it in the order according to the documentation?)
 //TODO: move to apiTypes?
 export interface BoardDataRaw {
@@ -14,8 +18,14 @@ export interface BoardDataRaw {
 	url: string;
 	shortUrl: string;
 	prefs: Prefs;
+
+	//Only present if the 'labels' nested resource is requested
+	labels?: LabelDataRaw[]
+
+	//You likely *won't* want to use these, it doesn't show multiple labels if they have the same color, and still returns the color name even if the label is missing
 	labelNames: {
 		//TODO: figure out if this is even useful - what if there are multiple labels with the same color? (that is a thing the web UI supports)
+		//duplicate labels just aren't shown here
 		green: string;
 		yellow: string;
 		orange: string;
@@ -47,15 +57,25 @@ export interface BoardDataRaw {
 	enterpriseOwned: boolean;
 }
 
-export class Board {
+export class Board extends Entity<BoardDataRaw> {
 	get closed() { return this.raw.closed; }
 	get desc() { return this.raw.desc; }
-	get id() { return this.raw.id; }
 
-	//TODO: implement a Entity class/interface for everything built off a Trello API response object (anything with a .raw -> data prop)
-	// .assign(raw data) - copy new/updated data from the API, maintain itself as applicable (destroy/unlink child entities that no longer exist)
-	// <static> .fetch(id) - load a new instance of itself from the API
-	// .refresh() - pull new data from the API and assign it to self
+	static override async fetch(client: Client, id: string): Promise<Board> {
+		const data = await Board.fetchData(client, id);
+		return new Board(client, data);
+	}
 
-	raw: BoardDataRaw;
+	static override async fetchData(client: Client, id: string): Promise<BoardDataRaw> {
+		return await client.makeRequest(HTTP.get, `/1/boards/${id}`, {
+			labels: "all",
+			label_fields: "color,idBoard,name",
+			labels_limit: 100
+		});
+	}
+
+	async refresh(): Promise<void> {
+		this.assign(await Board.fetchData(this.client, this.id));
+	}
 }
+

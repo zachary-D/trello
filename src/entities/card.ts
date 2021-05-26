@@ -1,13 +1,11 @@
-export abstract class Entity<DataRaw> {
-	//The entity's raw data
-	protected raw: DataRaw;
+import { Entity } from "./entity";
 
-	//Applies new or updated entity data to the entity
-	abstract assign(raw: DataRaw): this;
+export interface CardDataRaw {
+	id: string;
+}
 
-	//Retrieves a new entity from the API
-	abstract fetch(id: string): Promise<Entity<DataRaw>>;
-
-	//Refreshes the current entity
-	abstract refresh(): Promise<void>;
+export class Card extends Entity<CardDataRaw> {
+	override async refresh(): Promise<void> {
+		this.assign(await Card.fetchData(this.client, this.id));
+	}
 }
